@@ -7,7 +7,7 @@
 
 [Adatok](https://github.com/boiboozled/mi-ember-hf#Adatok)
 
-- [Az adathalmazról](https://github.com/boiboozled/mi-ember-hf#[az-adathalmazról)
+- [Az adathalmazról](https://github.com/boiboozled/mi-ember-hf#az-adathalmazról)
   
 - [Adatelőkészítés](https://github.com/boiboozled/mi-ember-hf#Adatelőkészítés)
   
