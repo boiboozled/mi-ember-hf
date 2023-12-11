@@ -20,7 +20,10 @@
 [Konklúzió](https://github.com/boiboozled/mi-ember-hf#Konklúzió)
 
 ## Motiváció
-A házi feladatom motivációja a Magyar Madártani és Természetvédelmi Egyesület által készített alkalmazás, a [Madárhatározó](https://mme.hu/madarhatarozo-mobiltelefonos-alkalmazas-0). Ahogy a neve is sugallja, az alkalmazás fő célja, hogy segítse beazonosítani a madárfajtákat az arra kiváncsiaknak. Jelenleg ezt három sliderrel lehet megtenni, ahol ki kell választani a látott madár alakját, tollazata színét és az észlelés helyszínét. A célom az volt, hogy egy olyan képfelismerő modellt készítsek, ami megkönnyíti ezt a folyamatot, és az alkalmazás egy új funkciójának alapját képezheti.
+A házi feladatom motivációja a Magyar Madártani és Természetvédelmi Egyesület által készített alkalmazás, a [Madárhatározó](https://mme.hu/madarhatarozo-mobiltelefonos-alkalmazas-0). Ahogy a neve is sugallja, az alkalmazás fő célja, hogy segítse beazonosítani a madárfajtákat az arra kiváncsiaknak. Jelenleg ezt három sliderrel lehet megtenni, ahol ki kell választani a látott madár alakját, tollazata színét és az észlelés helyszínét (lásd az alábbi képen). A célom az volt, hogy egy olyan képfelismerő modellt készítsek, ami megkönnyíti ezt a folyamatot, és az alkalmazás egy új funkciójának alapját képezheti.
+<p align="center">
+  <img src="/pics/Madarhatarozo_ezmilehet.png" alt="Madárfajták keresése a Madárhatáozó applikációban" width="200"/>
+</p>
 
 ## Feladat
 A félév során elvégzendő feladatom az volt, hogy egy olyan képfelismerő modellt készítsek, ami kellően pontosan tud madárfajtákat felismerni. Ezt a célt transfer learning és ensemble learning segítségével kívántam elérni. Transfer learning esetén egy már betanított modellt tanítunk újra más adatokon, egy új feladatra. Ensemble learning esetén pedig több modell kimenetét használjuk fel, hogy előállítsuk az új kimenetet.
@@ -52,10 +55,15 @@ A megvizsgált modellek:
 - Squeeznet1-1
 - Mobilnet v2
 - Densenet-121
-A fenti modellek közül a két legjobban teljesítő a ResNet-101 és Densenet-121 voltak, ezért ezekkel folytattam a munkám. Mind a két modellnek két verzióját tartottam meg, mert a wandb söprések (sweep) során az látszott, hogy a modellek hasonló eredményt érnek el Adam és AdamW optimalizálókkal, mint SGD-vel, csak sokkal hamarabb kezdenek el túltanulni a tanító adatokon. Mind a négy modell verzió kb 57%-os pontosságot ért el a validációs halmazon.
+A fenti modellek közül a két legjobban teljesítő a ResNet-101 és Densenet-121 voltak, ezért ezekkel folytattam a munkám. Mind a két modellnek két verzióját tartottam meg, mert a wandb söprések (sweep) során az látszott, hogy a modellek hasonló eredményt érnek el Adam és AdamW optimalizálókkal, mint SGD-vel, csak sokkal hamarabb kezdenek el túltanulni a tanító adatokon. Ez abból is látszik, hogy a lenti ábrán jóval nagyobb a különbség a tanító- és a validációs adathalmazon elért pontosságok (train_acc_epoch és val_acc értékek) között az Adam optimalizálókkal tanított modellek (resnet101-pretrained-adam és densenet121-adam-pretrained) esetében, mint az SGD-vel optimalizáltakéban (densenet121-sgd-pretrained és resnet101-numcl1k-imagenet1kv2-sgd). Mind a négy modell verzió kb 57%-os pontosságot ért el a validációs halmazon.
+<p align="center">
+  <img src="/pics/dense_res.png" alt="Densenet-121 és ResNet-101 tanítási eredmények" width="800"/>
+</p>
 ### Ensemble Learning
-Transfer learning során a betanított modellek kimenetét egyetlen FC réteggel alakítottam át 200 osztályú kimenetté. Az ensemble modellt vizsgáltam úgy is, hogy két modell kimenetein tanítottam, és úgy is, hogy mind a négy modellén. A két modelles esetekben minden elképzelhető permutációt megvizsgáltam, SGD és Adam optimalizálóval is. Végül a legjobb eredmény akkor jött ki, amikor mind a Denset-121, mind a ResNet-101 SGD-vel optimaliz
-lt verzióját használtam az ensemble modell tanítására, amit szintén SGD-vel optimalizáltam. Azonban ennek a modellnek is csak 60%-os pontosságot sikerült elérnie, ami azon kívül, hogy rendkívül alacsony, alig múlja felül az alap modellek teljesítményét.
+Transfer learning során a betanított modellek kimenetét egyetlen FC réteggel alakítottam át 200 osztályú kimenetté. Az ensemble modellt vizsgáltam úgy is, hogy két modell kimenetein tanítottam, és úgy is, hogy mind a négy modellén. A két modelles esetekben minden elképzelhető permutációt megvizsgáltam, SGD és Adam optimalizálóval is. Végül a legjobb eredmény akkor jött ki, amikor mind a Denset-121, mind a ResNet-101 SGD-vel optimalizált verzióját használtam az ensemble modell tanítására, amit szintén SGD-vel optimalizáltam, és minden súlyt tanítottam (ensemble-all-densesgd-ressgd-sgd). Azonban ennek a modellnek is csak 60%-os pontosságot sikerült elérnie, ami azon kívül, hogy rendkívül alacsony, alig múlja felül az alap modellek teljesítményét.
+<p align="center">
+  <img src="/pics/ensemble.png" alt="Ensemble modell eredmények" width="1000"/>
+</p>
 
 ## Konklúzió
 A házi feladatom során madárfajták osztályozásával foglalkoztam, célom az volt, hogy egy kellően erős modellt tanytsak ahhoz, hogy az egy képfelismerő funkció alapját képezhesse akár aMadárhatározó nevű applikáció kiegészítéseként. A munkám során a CUB-200-2011 adathalmazzal dolgoztam, amin előre betanított modelleket tanítottam transfer learning segytségével. A legjobban teljesítő modelleket felhasználva aztán egy ensemble modellt tanítottam, ami ugyan felül tudta múlni az újratanított modelleket, de így is jócskán elmaradta kívánt pontosságtól. A végső 60%-os pontosságú modell ugyanis nem elég jó ahhoz, hogy egy képfelismerő funkció biztos alapját képezze.
