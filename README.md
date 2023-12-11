@@ -70,3 +70,6 @@ A házi feladatom során madárfajták osztályozásával foglalkoztam, célom a
 
 ## Szerző
 Mihályi Balázs Márk
+
+## Nyilatkozat
+Kijelentem, hogy a tárgy keretében végzett házi feladatom nem ütközött más tárgy keretében végzett munkámmal, a feladatot egyedül végeztem.
